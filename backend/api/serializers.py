@@ -1,4 +1,5 @@
 from drf_extra_fields.fields import Base64ImageField
+from django.db import transaction
 from django.db.models import F
 from django.shortcuts import get_object_or_404
 from djoser.serializers import UserCreateSerializer, UserSerializer
@@ -213,6 +214,7 @@ class RecipeWriteSerializer(ModelSerializer):
             ) for ingredient in ingredients]
         )
 
+    @transaction.atomic
     def create(self, validated_data):
         tags = validated_data.pop('tags')
         ingredients = validated_data.pop('ingredients')
@@ -222,6 +224,7 @@ class RecipeWriteSerializer(ModelSerializer):
                                         ingredients=ingredients)
         return recipe
 
+    @transaction.atomic
     def update(self, instance, validated_data):
         tags = validated_data.pop('tags')
         ingredients = validated_data.pop('ingredients')

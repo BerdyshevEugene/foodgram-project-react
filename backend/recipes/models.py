@@ -112,8 +112,8 @@ class IngredientAmount(models.Model):
     )
 
     class Meta:
-        verbose_name='кол-во ингридиента'
-        verbose_name_plural='кол-во ингридиентов'
+        verbose_name = 'кол-во ингридиента'
+        verbose_name_plural = 'кол-во ингридиентов'
 
     def __str__(self):
         return f'{self.ingredient} * {self.amount}'

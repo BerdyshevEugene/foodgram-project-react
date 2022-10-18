@@ -95,7 +95,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
         methods=['post', 'delete'],
         permission_classes=[IsAuthenticated]
     )
-
     def favorite(self, request, pk):
         if request.method == 'POST':
             return self.add_to(Favorite, request.user, pk)
@@ -107,7 +106,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
         methods=['post', 'delete'],
         permission_classes=[IsAuthenticated]
     )
-
     def shopping_cart(self, request, pk):
         if request.method == 'POST':
             return self.add_to(Shoppping_cart, request.user, pk)
@@ -161,5 +159,5 @@ def download_shopping_cart(request):
     response = HttpResponse(
         content, content_type='text/plain,charset=utf8'
     )
-    response['Content-Disposition'] = 'attachment; filename="shopping_cart.txt"'
+    response['Content-Disposition'] = 'attachment; filename="shop_cart.txt"'
     return response

@@ -10,7 +10,7 @@ services:
     restart: always
 
   backend:
-    image: eugenenez/foodgram:latest
+    image: eugenenez/foodgram_backend:latest
     restart: always
     volumes:
       - static_value:/app/static/
@@ -21,7 +21,7 @@ services:
       - .env
 
   frontend:
-    image: eugenenez/foodgram_front:latest
+    image: eugenenez/foodgram_frontend:latest
     volumes:
       - ../frontend/:/app/result_build/
 

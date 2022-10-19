@@ -8,10 +8,10 @@ app_name = 'api'
 
 router = DefaultRouter()
 
-router.register(r'users', CustomUserViewSet)
-router.register(r'tags', TagViewSet)
-router.register(r'ingredients', IngredientViewSet)
-router.register(r'recipes', RecipeViewSet)
+router.register('users', CustomUserViewSet)
+router.register('tags', TagViewSet)
+router.register('ingredients', IngredientViewSet)
+router.register('recipes', RecipeViewSet)
 
 
 urlpatterns = [
@@ -20,7 +20,7 @@ urlpatterns = [
         download_shopping_cart,
         name='download_shopping_cart'
     ),
-    path('', include(router.urls)),
     path('', include('djoser.urls')),
+    path('', include(router.urls)),
     path('auth/', include('djoser.urls.authtoken')),
 ]

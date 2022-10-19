@@ -9,8 +9,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.getenv('SECRET',
                        default='django-insecure-x3(1fpjn7b+ap=egt_7r=3hanqwl^0rc(mueln(&gk-swqok1@')
 
-DEBUG = False
-
+DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [

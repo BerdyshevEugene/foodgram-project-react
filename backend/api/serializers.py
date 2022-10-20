@@ -1,4 +1,5 @@
 from drf_extra_fields.fields import Base64ImageField
+from django.contrib.auth.hashers import make_password
 from django.db import transaction
 from django.db.models import F
 from django.shortcuts import get_object_or_404
@@ -37,20 +38,17 @@ class CustomUserSerializer(UserSerializer):
         )
         extra_kwargs = {'password': {'write_only': True}}
 
+    def create(self, validated_data):
+        validated_data['password'] = (
+            make_password(validated_data.pop('password'))
+        )
+        return super().create(validated_data)
+
     def get_is_subscribed(self, obj):
         user = self.context.get('request').user
         if not user or user.is_anonymous:
             return False
         return Subscribe.objects.filter(user=user, author=obj).exists()
-
-    def create(self, validated_data):
-        user = User(
-            email=validated_data['email'],
-            username=validated_data['username']
-        )
-        user.set_password(validated_data['password'])
-        user.save()
-        return user
 
 
 class SubscribeSerializer(serializers.ModelSerializer):

@@ -1,7 +1,47 @@
-from django.contrib.auth import get_user_model
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-User = get_user_model()
+
+class User(AbstractUser):
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ('username', 'first_name', 'last_name',)
+    USER = 'user'
+    ADMIN = 'admin'
+
+    ROLES = (
+        (USER, 'пользователь'),
+        (ADMIN, 'администратор'),
+    )
+
+    username = models.TextField('пользователь',
+                                unique=True,
+                                max_length=150
+                                )
+    role = models.CharField('роль',
+                            max_length=10,
+                            choices=ROLES,
+                            default=USER)
+    first_name = models.TextField('имя',
+                                  max_length=150)
+    last_name = models.TextField('фамилия',
+                                 max_length=150)
+    email = models.EmailField('e-mail',
+                              unique=True,
+                              max_length=254)
+
+    @property
+    def is_admin(self):
+        return self.role == self.ADMIN or self.is_superuser
+
+    class Meta:
+        verbose_name = 'пользователь'
+        verbose_name_plural = 'пользователи'
+        ordering = ('username',)
+
+    def __str__(self):
+        if self.username:
+            return self.username
+        return self.email
 
 
 class Subscribe(models.Model):

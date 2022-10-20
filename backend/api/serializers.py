@@ -15,12 +15,10 @@ from users.models import Subscribe, User
 
 class CustomUserCreateSerializer(UserCreateSerializer):
 
-    class Meta:
+    class Meta(UserCreateSerializer.Meta):
         model = User
-        fields = tuple(User.REQUIRED_FIELDS) + (
-            User.USERNAME_FIELD,
-            'password',
-        )
+        fields = ('id', 'email', 'username', 'first_name', 'last_name',
+                  'password')
 
 
 class CustomUserSerializer(UserSerializer):
@@ -39,7 +37,7 @@ class CustomUserSerializer(UserSerializer):
 
     def get_is_subscribed(self, obj):
         user = self.context.get('request').user
-        if user.is_anonymous:
+        if not user or user.is_anonymous:
             return False
         return Subscribe.objects.filter(user=user, author=obj).exists()
 

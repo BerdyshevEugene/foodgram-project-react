@@ -1,4 +1,5 @@
 from drf_extra_fields.fields import Base64ImageField
+from django.conf import settings
 from django.contrib.auth.hashers import make_password
 from django.db import transaction
 from django.db.models import F

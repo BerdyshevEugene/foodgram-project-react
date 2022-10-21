@@ -159,5 +159,5 @@ def download_shopping_cart(request):
     response = HttpResponse(
         content, content_type='text/plain,charset=utf8'
     )
-    response['Content-Disposition'] = 'attachment; filename="shopping_cart.txt"'
+    response['Content-Disposition'] = 'attachment; filename="shop_cart.txt"'
     return response

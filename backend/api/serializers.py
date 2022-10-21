@@ -13,7 +13,7 @@ from recipes.models import (Tag, Ingredient, Recipe, IngredientAmount)
 from users.models import Subscribe, User
 
 
-class CustomUserCreateSerializer(UserCreateSerializer):
+class UserRegistrationSerializer(UserCreateSerializer):
 
     class Meta(UserCreateSerializer.Meta):
         model = User

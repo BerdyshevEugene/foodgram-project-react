@@ -1,33 +1,47 @@
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-from .managers import UserManager
 
-
-class User(AbstractBaseUser, PermissionsMixin):
-    email = models.EmailField('Почта', max_length=254, unique=True)
-    username = models.CharField('Никнейм', max_length=150)
-    first_name = models.CharField('Имя', max_length=150)
-    last_name = models.CharField('Фамилия', max_length=150)
-    password = models.CharField('Пароль', max_length=150)
-    is_superuser = models.BooleanField('Администратор', default=False)
-
+class User(AbstractUser):
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']
+    REQUIRED_FIELDS = ('username', 'first_name', 'last_name',)
+    USER = 'user'
+    ADMIN = 'admin'
 
-    objects = UserManager()
+    ROLES = (
+        (USER, 'Пользователь'),
+        (ADMIN, 'Администратор'),
+    )
 
-    class Meta:
-        ordering = ('-pk',)
-        verbose_name = 'Пользователь'
-        verbose_name_plural = 'Пользователи'
-
-    def __str__(self):
-        return self.username
+    username = models.TextField('Пользователь',
+                                unique=True,
+                                max_length=150
+                                )
+    role = models.CharField('Роль',
+                            max_length=10,
+                            choices=ROLES,
+                            default=USER)
+    first_name = models.TextField('Имя',
+                                  max_length=150)
+    last_name = models.TextField('Фамилия',
+                                 max_length=150)
+    email = models.EmailField('E-mail',
+                              unique=True,
+                              max_length=254)
 
     @property
-    def is_staff(self):
-        return self.is_superuser
+    def is_admin(self):
+        return self.role == self.ADMIN or self.is_superuser
+
+    class Meta:
+        verbose_name = 'Пользователь'
+        verbose_name_plural = 'Пользователи'
+        ordering = ('username',)
+
+    def __str__(self):
+        if self.username:
+            return self.username
+        return self.email
 
 
 class Subscribe(models.Model):

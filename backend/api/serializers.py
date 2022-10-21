@@ -11,11 +11,44 @@ from rest_framework.relations import PrimaryKeyRelatedField
 from rest_framework.serializers import ModelSerializer
 
 from recipes.models import (Tag, Ingredient, Recipe, IngredientAmount)
-from users.models import Subscribe
+from users.models import Subscribe, User
 
-from django.contrib.auth import get_user_model
-from django.conf import settings
-User = get_user_model()
+
+class CustomUserCreateSerializer(UserCreateSerializer):
+
+    class Meta(UserCreateSerializer.Meta):
+        model = User
+        fields = ('id', 'email', 'username', 'first_name', 'last_name',
+                  'password')
+
+
+class CustomUserSerializer(UserSerializer):
+    is_subscribed = serializers.SerializerMethodField(read_only=True)
+
+    class Meta:
+        model = User
+        fields = (
+            'email',
+            'id',
+            'username',
+            'first_name',
+            'last_name',
+            'is_subscribed',
+            'password',
+        )
+        extra_kwargs = {'password': {'write_only': True}}
+
+    def create(self, validated_data):
+        validated_data['password'] = (
+            make_password(validated_data.pop('password'))
+        )
+        return super().create(validated_data)
+
+    def get_is_subscribed(self, obj):
+        user = self.context.get('request').user
+        if not user or user.is_anonymous:
+            return False
+        return Subscribe.objects.filter(user=user, author=obj).exists()
 
 
 class SubscribeUserSerializer(serializers.ModelSerializer):
@@ -27,6 +60,7 @@ class SubscribeUserSerializer(serializers.ModelSerializer):
         fields = ('user', 'author')
 
     def validate(self, data):
+        """Валидатор подписки на пользователя"""
         user = self.context.get('request').user
         subscribing_id = self.data.get['author'].id
         if Subscribe.objects.filter(user=user,

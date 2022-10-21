@@ -36,13 +36,16 @@ class CustomUserSerializer(UserSerializer):
             'is_subscribed',
             'password',
         )
-        extra_kwargs = {'password': {'write_only': True}}
+        extra_kwargs = {'password': {'write_only': True, 'required': True}}
 
     def create(self, validated_data):
-        validated_data['password'] = (
-            make_password(validated_data.pop('password'))
+        user = User(
+            email=validated_data['email'],
+            username=validated_data['username']
         )
-        return super().create(validated_data)
+        user.set_password(validated_data['password'])
+        user.save()
+        return user
 
     def get_is_subscribed(self, obj):
         user = self.context.get('request').user

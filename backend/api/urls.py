@@ -3,8 +3,7 @@ from djoser.views import TokenDestroyView
 from rest_framework.routers import DefaultRouter
 
 from .views import (CustomUserViewSet, TagViewSet, IngredientViewSet,
-                    RecipeViewSet, download_shopping_cart,
-                    TokenCreateWithCheckBlockStatusView)
+                    RecipeViewSet, download_shopping_cart)
 
 app_name = 'api'
 
@@ -14,16 +13,6 @@ router.register('users', CustomUserViewSet)
 router.register('tags', TagViewSet)
 router.register('ingredients', IngredientViewSet)
 router.register('recipes', RecipeViewSet)
-
-
-authorization = [
-    path(
-        'token/login/',
-        TokenCreateWithCheckBlockStatusView.as_view(),
-        name="login",
-    ),
-    path('token/logout/', TokenDestroyView.as_view(), name="logout"),
-]
 
 urlpatterns = [
     path('', include(router.urls)),

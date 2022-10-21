@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django_filters.rest_framework import DjangoFilterBackend
 from django.shortcuts import get_object_or_404
-from djoser.views import UserViewSet, TokenCreateView
+from djoser.views import UserViewSet
 from rest_framework import viewsets, status
 from rest_framework.decorators import action, api_view
 from rest_framework.permissions import SAFE_METHODS, IsAuthenticated
@@ -17,14 +17,6 @@ from .serializers import (SubscribeSerializer, TagSerializer,
                           IngredientSerializer, RecipeReadSerializer,
                           RecipeShortSerializer, RecipeWriteSerializer,
                           CustomUserSerializer)
-
-
-class TokenCreateWithCheckBlockStatusView(TokenCreateView):
-    def _action(self, serializer):
-        if serializer.user.is_blocked:
-            return Response({'errors': 'пользователь заблокирован'},
-                            status=status.HTTP_400_BAD_REQUEST)
-        return super()._action(serializer)
 
 
 class CustomUserViewSet(UserViewSet):

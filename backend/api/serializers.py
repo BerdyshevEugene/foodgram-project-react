@@ -51,7 +51,7 @@ class CustomUserSerializer(UserSerializer):
         return Subscribe.objects.filter(user=user, author=obj).exists()
 
 
-class SubscribeUserSerializer(serializers.ModelSerializer):
+class SubscribeSerializer(serializers.ModelSerializer):
     is_subscribed = serializers.SerializerMethodField()
     recipes_count = SerializerMethodField()
     recipes = SerializerMethodField()

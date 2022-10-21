@@ -1,9 +1,10 @@
 from django.urls import include, path
-from djoser import views
+from djoser.views import TokenDestroyView
 from rest_framework.routers import DefaultRouter
 
 from .views import (CustomUserViewSet, TagViewSet, IngredientViewSet,
-                    RecipeViewSet, download_shopping_cart)
+                    RecipeViewSet, download_shopping_cart,
+                    TokenCreateWithCheckBlockStatusView)
 
 app_name = 'api'
 
@@ -15,11 +16,17 @@ router.register('ingredients', IngredientViewSet)
 router.register('recipes', RecipeViewSet)
 
 
+authorization = [
+    path(
+        'token/login/',
+        TokenCreateWithCheckBlockStatusView.as_view(),
+        name="login",
+    ),
+    path('token/logout/', TokenDestroyView.as_view(), name="logout"),
+]
+
 urlpatterns = [
     path('', include(router.urls)),
-    path('auth/token/login/', views.TokenCreateView.as_view(), name='login'),
-    path('auth/token/logout/', views.TokenDestroyView.as_view(),
-         name='logout'),
     path(
         'recipes/download_shopping_cart/',
         download_shopping_cart,

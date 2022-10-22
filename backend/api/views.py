@@ -4,16 +4,17 @@ from django.shortcuts import get_object_or_404
 from djoser.views import UserViewSet
 from rest_framework import viewsets, generics, permissions, status
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import (IsAuthenticated,
+                                        IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from recipes.models import (Tag, Ingredient, Recipe, IngredientAmount,
                             ShoppingCart, Favorite)
 from users.models import Subscribe, User
-from .filters import IngredientFilter, RecipeFilter
+from .filters import IngredientsFilter, RecipeFilter
 from .paginations import CustomPagination
-from .permissions import (AdminPermission, IsAuthorOrAdmin)
+from .permissions import (IsAuthorOrAdmin)
 from .serializers import (TagSerializer, IngredientSerializer,
                           CustomUserSerializer, SubscribeViewSerializer,
                           AddRecipeSerializer, ShowRecipeFullSerializer,
@@ -25,44 +26,6 @@ class CustomUserViewSet(UserViewSet):
     queryset = User.objects.all()
     serializer_class = CustomUserSerializer
     pagination_class = CustomPagination
-
-    # @action(
-    #     detail=True,
-    #     methods=['post', 'delete'],
-    #     permission_classes=[IsAuthenticated]
-    # )
-    # def subscribe(self, request, **kwargs):
-    #     user = request.user
-    #     author_id = self.kwargs.get('id')
-    #     author = get_object_or_404(User, id=author_id)
-
-    #     if request.method == 'POST':
-    #         serializer = SubscribeSerializer(author,
-    #                                          data=request.data,
-    #                                          context={'request': request})
-    #         serializer.is_valid(raise_exception=True)
-    #         Subscribe.objects.create(user=user, author=author)
-    #         return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-    #     if request.method == 'DELETE':
-    #         subscription = get_object_or_404(Subscribe,
-    #                                          user=user,
-    #                                          author=author)
-    #         subscription.delete()
-    #         return Response(status=status.HTTP_204_NO_CONTENT)
-
-    # @action(
-    #     detail=False,
-    #     permission_classes=[IsAuthenticated]
-    # )
-    # def subscriptions(self, request):
-    #     user = request.user
-    #     queryset = User.objects.filter(subscribing__user=user)
-    #     pages = self.paginate_queryset(queryset)
-    #     serializer = SubscribeSerializer(pages,
-    #                                      many=True,
-    #                                      context={'request': request})
-    #     return self.get_paginated_response(serializer.data)
 
 
 class SubscribeApiView(APIView):
@@ -106,22 +69,9 @@ class ListSubscribeViewSet(generics.ListAPIView):
         return User.objects.filter(subscribing__user=user)
 
 
-class TagViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Tag.objects.all()
-    serializer_class = TagSerializer
-
-
-class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Ingredient.objects.all()
-    serializer_class = IngredientSerializer
-    permission_classes = (IsAuthorOrAdmin,)
-    filter_backends = (DjangoFilterBackend,)
-    filterset_class = IngredientFilter
-
-
 class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
-    permission_classes = (AdminPermission, IsAuthorOrAdmin)
+    permission_classes = (IsAuthorOrAdmin,)
     serializer_class = ShowRecipeFullSerializer
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilter
@@ -188,3 +138,19 @@ class RecipeViewSet(viewsets.ModelViewSet):
             "ingredient__measurement_unit"
         ).annotate(amount=Sum("amount"))
         return get_shopping_list(ingredients_list)
+
+
+class TagViewSet(viewsets.ReadOnlyModelViewSet):
+    pagination_class = None
+    queryset = Tag.objects.all()
+    serializer_class = TagSerializer
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+
+
+class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
+    pagination_class = None
+    queryset = Ingredient.objects.all()
+    serializer_class = IngredientSerializer
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = IngredientsFilter

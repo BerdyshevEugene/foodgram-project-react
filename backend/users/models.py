@@ -49,7 +49,7 @@ class Subscribe(models.Model):
         User,
         on_delete=models.CASCADE,
         help_text='выберите пользователя',
-        related_name='follower',
+        related_name='subscriber',
         verbose_name='подписчик',
     )
     author = models.ForeignKey(
@@ -70,5 +70,5 @@ class Subscribe(models.Model):
         ordering = ['id']
         constraints = [models.UniqueConstraint(
             fields=['user', 'author'],
-            name='unique_subscription')
+            name='unique_author_user_subscribing')
         ]

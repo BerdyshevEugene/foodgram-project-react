@@ -136,7 +136,6 @@ DJOSER = {
 
 AUTHENTICATION_BACKENDS = (
     "django.contrib.auth.backends.ModelBackend",
-    "allauth.account.auth_backends.AuthenticationBackend"
 )
 
 ACCOUNT_AUTHENTICATION_METHOD = 'email'

@@ -13,7 +13,7 @@ from recipes.models import (Tag, Ingredient, Recipe, IngredientAmount,
 from users.models import Subscribe, User
 from .filters import IngredientFilter, RecipeFilter
 from .paginations import CustomPagination
-from .permissions import (AdminPermission, IsAuthorOrReadOnly)
+from .permissions import (AdminPermission, IsAuthorOrAdmin)
 from .serializers import (TagSerializer, IngredientSerializer,
                           CustomUserSerializer, SubscribeViewSerializer,
                           AddRecipeSerializer, ShowRecipeFullSerializer,
@@ -90,7 +90,7 @@ class SubscribeApiView(APIView):
             return Response(status=status.HTTP_204_NO_CONTENT)
         except Subscribe.DoesNotExist:
             return Response(
-                'Ошибка отписки',
+                'ошибка отписки',
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
@@ -114,14 +114,15 @@ class TagViewSet(viewsets.ReadOnlyModelViewSet):
 class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
-    permission_classes = (IsAuthorOrReadOnly,)
+    permission_classes = (IsAuthorOrAdmin,)
     filter_backends = (DjangoFilterBackend,)
     filterset_class = IngredientFilter
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
-    permission_classes = (AdminPermission, IsAuthorOrReadOnly)
+    permission_classes = (AdminPermission, IsAuthorOrAdmin)
+    serializer_class = ShowRecipeFullSerializer
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilter
 

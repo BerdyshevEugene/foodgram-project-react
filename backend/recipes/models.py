@@ -119,7 +119,7 @@ class IngredientAmount(models.Model):
         return f'{self.ingredient} * {self.amount}'
 
 
-class Shoppping_cart(models.Model):
+class Shopping_cart(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,

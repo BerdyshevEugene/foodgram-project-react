@@ -303,7 +303,7 @@ class ShowRecipeFullSerializer(serializers.ModelSerializer):
         if request.user.is_anonymous:
             return False
         return ShoppingCart.objects.filter(recipe=obj,
-                                            user=request.user).exists()
+                                           user=request.user).exists()
 
 
 class FavoriteSerializer(serializers.ModelSerializer):

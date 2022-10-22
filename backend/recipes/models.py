@@ -50,7 +50,6 @@ class Ingredient(models.Model):
 class Recipe(models.Model):
     name = models.CharField(
         max_length=100,
-        blank=True,
         verbose_name='название рецепта'
     )
     author = models.ForeignKey(
@@ -61,12 +60,10 @@ class Recipe(models.Model):
     )
     image = models.ImageField(
         upload_to='recipes/images/',
-        blank=True,
         verbose_name='изображение',
     )
     text = models.TextField(
         verbose_name='текстовое описание',
-        blank=True,
         help_text='введите текст'
     )
     ingredients = models.ManyToManyField(

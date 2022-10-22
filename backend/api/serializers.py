@@ -1,5 +1,6 @@
 from django.conf import settings
 from drf_extra_fields.fields import Base64ImageField
+from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from rest_framework import serializers
@@ -9,7 +10,9 @@ from rest_framework.serializers import ModelSerializer
 
 from recipes.models import (Tag, Ingredient, Recipe, IngredientAmount,
                             Favorite, ShoppingCart)
-from users.models import Subscribe, User
+from users.models import Subscribe
+
+User = get_user_model()
 
 
 class UserRegistrationSerializer(UserCreateSerializer):

@@ -9,10 +9,11 @@ from rest_framework.permissions import (IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from django.contrib.auth import get_user_model
 
 from recipes.models import (Tag, Ingredient, Recipe, IngredientAmount,
                             ShoppingCart, Favorite)
-from users.models import Subscribe, User
+from users.models import Subscribe
 from .filters import IngredientsFilter, RecipeFilter
 from .paginations import CustomPagination
 from .permissions import (IsAuthorOrAdmin)
@@ -21,6 +22,8 @@ from .serializers import (TagSerializer, IngredientSerializer,
                           AddRecipeSerializer, ShowRecipeFullSerializer,
                           FavoriteSerializer)
 from .utils import get_shopping_list
+
+User = get_user_model()
 
 
 class CustomUserViewSet(UserViewSet):

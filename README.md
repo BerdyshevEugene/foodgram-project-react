@@ -85,5 +85,7 @@ ____
 
 ## Author
 frontend: Yandex
-backend: Eugene Berdyshev 
+
+backend: Eugene Berdyshev
+
 ![Build Status](https://github.com/BerdyshevEugene/foodgram-project-react/workflows/main/badge.svg)

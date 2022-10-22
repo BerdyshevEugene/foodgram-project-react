@@ -9,7 +9,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from recipes.models import (Tag, Ingredient, Recipe, IngredientAmount,
-                            Shopping_cart, Favorite)
+                            ShoppingCart, Favorite)
 from users.models import Subscribe, User
 from .filters import IngredientFilter, RecipeFilter
 from .paginations import CustomPagination
@@ -170,9 +170,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
     )
     def shopping_cart(self, request, pk=None):
         if request.method == 'POST':
-            return self.add_recipe(Shopping_cart, request.user, pk)
+            return self.add_recipe(ShoppingCart, request.user, pk)
         else:
-            return self.delete_recipe(Shopping_cart, request.user, pk)
+            return self.delete_recipe(ShoppingCart, request.user, pk)
 
     @action(
         detail=False,

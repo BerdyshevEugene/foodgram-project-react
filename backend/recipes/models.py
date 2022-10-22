@@ -119,24 +119,24 @@ class IngredientAmount(models.Model):
         return f'{self.ingredient} * {self.amount}'
 
 
-class Shopping_cart(models.Model):
+class ShoppingCart(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name='shopping_cart',
-        verbose_name='пользователь'
+        verbose_name='продуктовая корзина'
     )
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
-        related_name='added_recipe',
+        related_name='shopping_cart',
         verbose_name='добавленный рецепт',
     )
 
     class Meta:
         constraints = [models.UniqueConstraint(
             fields=['user', 'recipe'],
-            name='users_shopping_cart'
+            name='unique_shopping_cart'
         )]
         ordering = ['-id']
         verbose_name = 'рецепт в корзине'
@@ -147,7 +147,7 @@ class Favorite(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='favorites',
+        related_name='favorite',
         verbose_name='пользователь'
     )
     recipe = models.ForeignKey(
@@ -160,7 +160,7 @@ class Favorite(models.Model):
     class Meta:
         constraints = [models.UniqueConstraint(
             fields=['user', 'recipe'],
-            name='users_favorite'
+            name='unique_favorite'
         )]
         ordering = ['-id']
         verbose_name = 'избранный рецепт'

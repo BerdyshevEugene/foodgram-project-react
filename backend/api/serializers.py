@@ -8,7 +8,7 @@ from rest_framework.fields import IntegerField
 from rest_framework.serializers import ModelSerializer
 
 from recipes.models import (Tag, Ingredient, Recipe, IngredientAmount,
-                            Favorite, Shopping_cart)
+                            Favorite, ShoppingCart)
 from users.models import Subscribe, User
 
 
@@ -302,7 +302,7 @@ class ShowRecipeFullSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         if request.user.is_anonymous:
             return False
-        return Shopping_cart.objects.filter(recipe=obj,
+        return ShoppingCart.objects.filter(recipe=obj,
                                             user=request.user).exists()
 
 
@@ -362,7 +362,7 @@ class ShoppingCartSerializer(serializers.ModelSerializer):
     )
 
     class Meta:
-        model = Shopping_cart
+        model = ShoppingCart
         fields = ('id', 'name', 'image', 'cooking_time')
 
 

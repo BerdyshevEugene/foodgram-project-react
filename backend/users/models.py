@@ -31,7 +31,7 @@ class User(AbstractUser):
     last_name = models.TextField(
         'Фамилия',
         max_length=150
-        )
+    )
     email = models.EmailField(
         'E-mail',
         unique=True,

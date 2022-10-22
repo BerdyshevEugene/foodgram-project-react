@@ -1,7 +1,10 @@
 from django.db.models import Sum
+from django.contrib.auth import get_user_model
 from django_filters.rest_framework import DjangoFilterBackend
 from django.shortcuts import get_object_or_404
+
 from djoser.views import UserViewSet
+
 from rest_framework import viewsets, generics, permissions, status
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
@@ -9,11 +12,11 @@ from rest_framework.permissions import (IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from django.contrib.auth import get_user_model
 
 from recipes.models import (Tag, Ingredient, Recipe, IngredientAmount,
                             ShoppingCart, Favorite)
 from users.models import Subscribe
+
 from .filters import IngredientsFilter, RecipeFilter
 from .paginations import CustomPagination
 from .permissions import (IsAuthorOrAdmin)
@@ -57,7 +60,7 @@ class SubscribeApiView(APIView):
             return Response(status=status.HTTP_204_NO_CONTENT)
         except Subscribe.DoesNotExist:
             return Response(
-                'ошибка отписки',
+                'не удалось отписаться',
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
@@ -107,11 +110,11 @@ class RecipeViewSet(viewsets.ModelViewSet):
     @action(
         detail=True,
         methods=["POST", "DELETE"],
-        url_path="favorite",
+        url_path='favorite',
         permission_classes=[IsAuthenticated],
     )
     def favorite(self, request, pk=None):
-        if request.method == 'POST':
+        if request.method == "POST":
             return self.add_recipe(Favorite, request.user, pk)
         else:
             return self.delete_recipe(Favorite, request.user, pk)
@@ -119,11 +122,11 @@ class RecipeViewSet(viewsets.ModelViewSet):
     @action(
         detail=True,
         methods=["POST", "DELETE"],
-        url_path="shopping_cart",
+        url_path='shopping_cart',
         permission_classes=[IsAuthenticated],
     )
     def shopping_cart(self, request, pk=None):
-        if request.method == 'POST':
+        if request.method == "POST":
             return self.add_recipe(ShoppingCart, request.user, pk)
         else:
             return self.delete_recipe(ShoppingCart, request.user, pk)
@@ -132,15 +135,15 @@ class RecipeViewSet(viewsets.ModelViewSet):
         detail=False,
         methods=["GET"],
         permission_classes=[IsAuthenticated],
-        url_path="download_shopping_cart",
+        url_path='download_shopping_cart',
     )
     def download_shopping_cart(self, request):
         ingredients_list = IngredientAmount.objects.filter(
             recipe__shopping_cart__user=request.user
         ).values(
-            "ingredient__name",
-            "ingredient__measurement_unit"
-        ).annotate(amount=Sum("amount"))
+            'ingredient__name',
+            'ingredient__measurement_unit'
+        ).annotate(amount=Sum('amount'))
         return get_shopping_list(ingredients_list)
 
 

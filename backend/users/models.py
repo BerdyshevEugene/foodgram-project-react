@@ -13,21 +13,30 @@ class User(AbstractUser):
         (ADMIN, 'Администратор'),
     )
 
-    username = models.TextField('Пользователь',
-                                unique=True,
-                                max_length=150
-                                )
-    role = models.CharField('Роль',
-                            max_length=10,
-                            choices=ROLES,
-                            default=USER)
-    first_name = models.TextField('Имя',
-                                  max_length=150)
-    last_name = models.TextField('Фамилия',
-                                 max_length=150)
-    email = models.EmailField('E-mail',
-                              unique=True,
-                              max_length=254)
+    username = models.TextField(
+        'Пользователь',
+        unique=True,
+        max_length=150
+    )
+    role = models.CharField(
+        'Роль',
+        max_length=10,
+        choices=ROLES,
+        default=USER
+    )
+    first_name = models.TextField(
+        'Имя',
+        max_length=150
+    )
+    last_name = models.TextField(
+        'Фамилия',
+        max_length=150
+        )
+    email = models.EmailField(
+        'E-mail',
+        unique=True,
+        max_length=254
+    )
 
     @property
     def is_admin(self):
@@ -36,7 +45,7 @@ class User(AbstractUser):
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
-        ordering = ('username',)
+        ordering = ['username']
 
     def __str__(self):
         if self.username:
